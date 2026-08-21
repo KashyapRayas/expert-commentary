@@ -1,0 +1,182 @@
+/*
+ * Figma node 149:1507. Measurements are taken straight from the design:
+ * 1600px rails with hairline sides, a 1400px content row, and a two-column
+ * split whose heights resolve so the left panel lands at 326.25px — which is
+ * the empty frame the fan fills.
+ */
+.section {
+  --line: #e4e4e7;
+  --ink: #18181b;
+
+  background: #f5f5f5;
+  width: 100%;
+}
+
+.bleed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px;
+  overflow: hidden;
+}
+
+.rails {
+  width: 100%;
+  max-width: 1600px;
+  padding: 128px 36px 64px;
+  border-left: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+}
+
+.row {
+  display: flex;
+  gap: 48px;
+  align-items: stretch;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.left,
+.right {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.left {
+  gap: 24px;
+}
+
+.right {
+  gap: 18px;
+  justify-content: flex-end;
+}
+
+/* ---------- heading ---------- */
+
+.heading {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+
+.icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 4px;
+  background: rgba(255, 168, 21, 0.16);
+}
+
+.icon img {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+
+.heading h2 {
+  margin: 0;
+  font-family: Geist, ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: normal;
+  color: var(--ink);
+}
+
+.lede {
+  margin: 0;
+  font-family: Geist, ui-sans-serif, system-ui, sans-serif;
+  font-size: 16px;
+  line-height: normal;
+  color: rgba(24, 24, 27, 0.6);
+}
+
+/* ---------- the panel the fan fills ---------- */
+
+.panel {
+  flex: 1 1 0;
+  min-height: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #e4e4e4;
+  overflow: hidden;
+}
+
+/* ---------- photo and pull quote ---------- */
+
+.photo {
+  aspect-ratio: 682 / 383.625;
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.quote {
+  display: flex;
+  align-items: stretch;
+  margin: 0;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.quote blockquote {
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0;
+  padding: 18px 24px 24px;
+  border-right: 1px solid var(--line);
+  font-family: 'IBM Plex Serif', Georgia, serif;
+  font-size: 22px;
+  line-height: normal;
+  color: var(--ink);
+}
+
+.quote figcaption {
+  flex: none;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 12px 12px 12px 18px;
+  font-family: Geist, ui-sans-serif, system-ui, sans-serif;
+  line-height: normal;
+}
+
+.name {
+  font-size: 16px;
+  color: var(--ink);
+}
+
+.role {
+  font-size: 14px;
+  color: #71717a;
+}
+
+@media (max-width: 900px) {
+  .row {
+    flex-direction: column;
+  }
+
+  .rails {
+    padding: 64px 20px 48px;
+  }
+
+  .panel {
+    min-height: 326px;
+  }
+}

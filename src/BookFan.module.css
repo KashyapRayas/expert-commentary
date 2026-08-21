@@ -1,0 +1,153 @@
+/*
+ * Sizing is driven by container query units, so the fan scales with whatever
+ * box it is dropped into — the Figma slot is a wide, short landscape frame, and
+ * the books are sized off its height and then allowed to run off the bottom
+ * edge, which is what gives the deck its "rising out of the frame" crop.
+ */
+.stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  --panel: #e4e4e4;
+
+  background: var(--panel);
+  overflow: hidden;
+  container-type: size;
+}
+
+.deck {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+
+  /*
+   * --bh / --bw / --thick are set inline from BookFan.jsx. They live there
+   * because the proximity effect has to know where each book sits to measure
+   * the cursor against it, and one source of truth beats the same three ratios
+   * drifting apart in two files.
+   */
+}
+
+/*
+ * Absolutely positioned, but with no offsets given: the flex centring above
+ * supplies the static position, so every slot starts top-centre and is moved
+ * out by its own translate.
+ */
+.slot {
+  position: absolute;
+  width: var(--bw);
+  height: var(--bh);
+  perspective: 1000px;
+  /* Scale from the top edge, so a tier's y offset is its actual top however far
+     back it sits and each step shrinks downward rather than about its middle. */
+  transform-origin: 50% 0;
+  will-change: transform, opacity;
+}
+
+.inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/*
+ * A real box, built the standard way: every face is centred on the block and
+ * pushed out along its own normal. Hinging the sides off an edge instead looks
+ * equivalent but leaves each side face pointing inward, so it renders as a
+ * backface and the cover paints straight over it. Built this way the outward
+ * normals are correct and backface-visibility hides whichever side is round the
+ * back, which is what makes the spine appear as the fan opens.
+ */
+.face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 2px;
+  background: #f5f5f5;
+  transform: translateZ(calc(var(--thick) / 2));
+  backface-visibility: hidden;
+  box-shadow:
+    0 1px 2px rgba(20, 24, 33, 0.12),
+    0 8px 20px rgba(20, 24, 33, 0.14);
+}
+
+.face img,
+.side img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+}
+
+.side {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--thick);
+  height: 100%;
+  margin-left: calc(var(--thick) / -2);
+  overflow: hidden;
+  background: #2b2b2b;
+  backface-visibility: hidden;
+}
+
+/*
+ * Rotated to face outward, then pushed out along that new normal by half the
+ * cover's width. The wrap art already runs back-cover -> spine -> front-cover,
+ * which is the same order these faces unfold in, so no mirroring is needed.
+ */
+.sideLeft {
+  transform: rotateY(-90deg) translateZ(calc(var(--bw) / 2));
+}
+
+.sideRight {
+  transform: rotateY(90deg) translateZ(calc(var(--bw) / 2));
+}
+
+/* The fore-edge: a stack of leaves, slightly recessed under the cover. */
+.pages {
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(
+      to right,
+      rgba(60, 50, 35, 0.4) 0%,
+      rgba(60, 50, 35, 0) 18%,
+      rgba(60, 50, 35, 0) 82%,
+      rgba(60, 50, 35, 0.4) 100%
+    ),
+    repeating-linear-gradient(
+      to right,
+      #f2ede3 0 1px,
+      #ddd5c4 1px 2px
+    );
+}
+
+ /*
+ * The recession scrim: the panel's own colour laid over a book, so distance
+ * washes it towards the background while it stays completely solid. Sits above
+ * the glimmer, so a far book does not catch a bright sweep it should be too far
+ * away to show.
+ */
+.haze {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: var(--panel);
+  pointer-events: none;
+}
+
+.glimmer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  transition: opacity 0.3s ease;
+}
